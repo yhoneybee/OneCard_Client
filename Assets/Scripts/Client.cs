@@ -6,38 +6,48 @@ using System;
 
 public class Client : MonoBehaviour
 {
-    NetClient C { get; set; } = new NetClient();
+    public static NetClient C { get; set; } = new NetClient();
     NetConnectionParam Param { get; set; } = new NetConnectionParam();
+    public static C2S.Proxy Proxy { get; set; } = new C2S.Proxy();
+    public static S2C.Stub Stub { get; set; } = new S2C.Stub();
 
-/*    C2S.Proxy C2SProxy { get; set; } = new C2S.Proxy();
-    C2C.Proxy C2CProxy { get; set; } = new C2C.Proxy();
-    S2C.Stub S2CStub { get; set; } = new S2C.Stub();
-    C2C.Stub C2CStub { get; set; } = new C2C.Stub();*/
+    public static string Room_name;
 
     void Start()
     {
-        Param.serverIP = "172.30.1.22";
+        Param.serverIP = "172.30.1.32";
         Param.protocolVersion = new Nettention.Proud.Guid("{E54C4938-8BFC-4443-87F3-386C1AA388F0}");
         Param.serverPort = 6475;
 
-        C.P2PMemberJoinHandler = OnP2PJoin;
-        C.P2PMemberLeaveHandler = OnP2PLeave;
+        Stub.Start = OnStart;
+        Stub.TurnStart = OnTurnStart;
+        Stub.Rank = OnRank;
+        Stub.ExcludeGame = OnExcludeGame;
 
-/*        C.AttachProxy(C2SProxy);
-        C.AttachProxy(C2CProxy);
-        C.AttachStub(S2CStub);
-        C.AttachStub(C2CStub);*/
-
+        C.AttachProxy(Proxy);
+        C.AttachStub(Stub);
         C.Connect(Param);
         Debug.Log("Connect!");
     }
 
-    private void OnP2PLeave(HostID memberHostID, HostID groupHostID, int memberCount)
+    private bool OnStart(HostID remote, RmiContext rmiContext)
     {
+        throw new NotImplementedException();
     }
 
-    private void OnP2PJoin(HostID memberHostID, HostID groupHostID, int memberCount, ByteArray message)
+    private bool OnTurnStart(HostID remote, RmiContext rmiContext)
     {
+        throw new NotImplementedException();
+    }
+
+    private bool OnRank(HostID remote, RmiContext rmiContext, int rank)
+    {
+        throw new NotImplementedException();
+    }
+
+    private bool OnExcludeGame(HostID remote, RmiContext rmiContext)
+    {
+        throw new NotImplementedException();
     }
 
     void Update()

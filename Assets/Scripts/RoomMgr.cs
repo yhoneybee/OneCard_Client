@@ -43,10 +43,13 @@ public class RoomMgr : MonoBehaviour
     {
         Client.Proxy.LeaveRoom(HostID.HostID_Server, RmiContext.ReliableSend, Client.Room_name);
         Client.Room_name = default;
+        UiMgr.Instance.GoLobby();
     }
     public void RoomJoin()
     {
         Client.Proxy.JoinRoom(HostID.HostID_Server, RmiContext.ReliableSend, Name.text, int.Parse(Pin.text));
         Client.Room_name = Name.text;
+        Client.isReady = false;
+        UiMgr.Instance.GoWaiting();
     }
 }

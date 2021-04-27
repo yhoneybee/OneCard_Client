@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using Nettention.Proud;
 using System;
 
@@ -16,6 +17,9 @@ public class Client : MonoBehaviour
     public static bool isReady = false;
 
     public Card LastCard;
+
+    public static Card Selected;
+    public List<Card> Cards { get; set; } = new List<Card>();
 
     void Start()
     {
@@ -37,10 +41,13 @@ public class Client : MonoBehaviour
         Debug.Log("Connect!");
         UiMgr.Instance.GoLobby();
     }
+    public void Down()
+    {
 
+    }
     private bool OnLastCard(HostID remote, RmiContext rmiContext, int symbol, int num)
     {
-        LastCard.SetCard(symbol, num);
+        LastCard.SetCard(symbol, num, false);
         return true;
     }
 
@@ -48,13 +55,19 @@ public class Client : MonoBehaviour
     {
         GameObject card = new GameObject($"{symbol}, {num}");
         card.AddComponent<Card>().SetCard(symbol, num);
-        card.AddComponent<RectTransform>().SetParent(GameObject.Find("Cards").GetComponent<RectTransform>().transform);
-        card.GetComponent<RectTransform>().sizeDelta = new Vector2(200, 300);
+        if (Cards.Count > 0)
+        {
+            BoxCollider2D prev_box = Cards[Cards.Count - 1].GetComponent<BoxCollider2D>();
+            prev_box.offset = new Vector2(-40, 0);
+            prev_box.size = new Vector2(125, 300);
+        }
+        Cards.Add(card.GetComponent<Card>());
         return true;
     }
 
     private bool OnChangeSymbol(HostID remote, RmiContext rmiContext, int symbol)
     {
+        LastCard.SetCard(symbol, LastCard.Num);
         return true;
     }
 

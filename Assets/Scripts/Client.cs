@@ -15,6 +15,8 @@ public class Client : MonoBehaviour
 
     public static bool isReady = false;
 
+    public Card LastCard;
+
     void Start()
     {
         Param.serverIP = "127.0.0.1";
@@ -23,6 +25,7 @@ public class Client : MonoBehaviour
 
         Stub.Start = OnStart;
         Stub.TurnStart = OnTurnStart;
+        Stub.LastCard = OnLastCard;
         Stub.Draw = OnDraw;
         Stub.ChangeSymbol = OnChangeSymbol;
         Stub.Rank = OnRank;
@@ -35,8 +38,18 @@ public class Client : MonoBehaviour
         UiMgr.Instance.GoLobby();
     }
 
+    private bool OnLastCard(HostID remote, RmiContext rmiContext, int symbol, int num)
+    {
+        LastCard.SetCard(symbol, num);
+        return true;
+    }
+
     private bool OnDraw(HostID remote, RmiContext rmiContext, int symbol, int num)
     {
+        GameObject card = new GameObject($"{symbol}, {num}");
+        card.AddComponent<Card>().SetCard(symbol, num);
+        card.AddComponent<RectTransform>().SetParent(GameObject.Find("Cards").GetComponent<RectTransform>().transform);
+        card.GetComponent<RectTransform>().sizeDelta = new Vector2(200, 300);
         return true;
     }
 
@@ -49,6 +62,8 @@ public class Client : MonoBehaviour
     {
         UiMgr.Instance.GoGame();
         Debug.Log("Game Start!");
+        for (int i = 0; i < 7; i++)
+            Proxy.Draw(HostID.HostID_Server, RmiContext.ReliableSend);
         return true;
     }
 

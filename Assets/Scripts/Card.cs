@@ -9,7 +9,8 @@ public class Card : MonoBehaviour
     {
         Symbol = symbol;
         Num = num;
-        GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>($"Card/{Symbol}/{Num}.img");
+        GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>($"Card/{Symbol}/{Num}");
+        GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>($"Card/{1}/{1}");
     }
     public int Symbol { get; set; }
     public int Num { get; set; }

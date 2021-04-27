@@ -23,6 +23,8 @@ public class Client : MonoBehaviour
 
         Stub.Start = OnStart;
         Stub.TurnStart = OnTurnStart;
+        Stub.Draw = OnDraw;
+        Stub.ChangeSymbol = OnChangeSymbol;
         Stub.Rank = OnRank;
         Stub.ExcludeGame = OnExcludeGame;
 
@@ -31,6 +33,16 @@ public class Client : MonoBehaviour
         C.Connect(Param);
         Debug.Log("Connect!");
         UiMgr.Instance.GoLobby();
+    }
+
+    private bool OnDraw(HostID remote, RmiContext rmiContext, int symbol, int num)
+    {
+        return true;
+    }
+
+    private bool OnChangeSymbol(HostID remote, RmiContext rmiContext, int symbol)
+    {
+        return true;
     }
 
     private bool OnStart(HostID remote, RmiContext rmiContext)

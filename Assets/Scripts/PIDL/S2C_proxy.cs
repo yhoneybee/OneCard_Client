@@ -61,6 +61,60 @@ __msg.Write(__msgid);
 	return RmiSend(remotes,rmiContext,__msg,
 		RmiName_TurnStart, Common.TurnStart);
 }
+public bool Draw(Nettention.Proud.HostID remote,Nettention.Proud.RmiContext rmiContext, int symbol, int num)
+{
+	Nettention.Proud.Message __msg=new Nettention.Proud.Message();
+		__msg.SimplePacketMode = core.IsSimplePacketMode();
+		Nettention.Proud.RmiID __msgid= Common.Draw;
+		__msg.Write(__msgid);
+		Nettention.Proud.Marshaler.Write(__msg, symbol);
+		Nettention.Proud.Marshaler.Write(__msg, num);
+		
+	Nettention.Proud.HostID[] __list = new Nettention.Proud.HostID[1];
+	__list[0] = remote;
+		
+	return RmiSend(__list,rmiContext,__msg,
+		RmiName_Draw, Common.Draw);
+}
+
+public bool Draw(Nettention.Proud.HostID[] remotes,Nettention.Proud.RmiContext rmiContext, int symbol, int num)
+{
+	Nettention.Proud.Message __msg=new Nettention.Proud.Message();
+__msg.SimplePacketMode = core.IsSimplePacketMode();
+Nettention.Proud.RmiID __msgid= Common.Draw;
+__msg.Write(__msgid);
+Nettention.Proud.Marshaler.Write(__msg, symbol);
+Nettention.Proud.Marshaler.Write(__msg, num);
+		
+	return RmiSend(remotes,rmiContext,__msg,
+		RmiName_Draw, Common.Draw);
+}
+public bool ChangeSymbol(Nettention.Proud.HostID remote,Nettention.Proud.RmiContext rmiContext, int symbol)
+{
+	Nettention.Proud.Message __msg=new Nettention.Proud.Message();
+		__msg.SimplePacketMode = core.IsSimplePacketMode();
+		Nettention.Proud.RmiID __msgid= Common.ChangeSymbol;
+		__msg.Write(__msgid);
+		Nettention.Proud.Marshaler.Write(__msg, symbol);
+		
+	Nettention.Proud.HostID[] __list = new Nettention.Proud.HostID[1];
+	__list[0] = remote;
+		
+	return RmiSend(__list,rmiContext,__msg,
+		RmiName_ChangeSymbol, Common.ChangeSymbol);
+}
+
+public bool ChangeSymbol(Nettention.Proud.HostID[] remotes,Nettention.Proud.RmiContext rmiContext, int symbol)
+{
+	Nettention.Proud.Message __msg=new Nettention.Proud.Message();
+__msg.SimplePacketMode = core.IsSimplePacketMode();
+Nettention.Proud.RmiID __msgid= Common.ChangeSymbol;
+__msg.Write(__msgid);
+Nettention.Proud.Marshaler.Write(__msg, symbol);
+		
+	return RmiSend(remotes,rmiContext,__msg,
+		RmiName_ChangeSymbol, Common.ChangeSymbol);
+}
 public bool Rank(Nettention.Proud.HostID remote,Nettention.Proud.RmiContext rmiContext, int rank)
 {
 	Nettention.Proud.Message __msg=new Nettention.Proud.Message();
@@ -117,6 +171,8 @@ __msg.Write(__msgid);
 // It is the unique pointer that indicates RMI name such as RMI profiler.
 public const string RmiName_Start="Start";
 public const string RmiName_TurnStart="TurnStart";
+public const string RmiName_Draw="Draw";
+public const string RmiName_ChangeSymbol="ChangeSymbol";
 public const string RmiName_Rank="Rank";
 public const string RmiName_ExcludeGame="ExcludeGame";
        
@@ -126,6 +182,8 @@ public const string RmiName_First = RmiName_Start;
 // It is the unique pointer that indicates RMI name such as RMI profiler.
 public const string RmiName_Start="";
 public const string RmiName_TurnStart="";
+public const string RmiName_Draw="";
+public const string RmiName_ChangeSymbol="";
 public const string RmiName_Rank="";
 public const string RmiName_ExcludeGame="";
        

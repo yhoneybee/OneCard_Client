@@ -11,7 +11,7 @@ using System.Net;
 
 namespace C2S
 {
-	public class Stub:Nettention.Proud.RmiStub
+    public class Stub:Nettention.Proud.RmiStub
 	{
 public AfterRmiInvocationDelegate AfterRmiInvocation = delegate(Nettention.Proud.AfterRmiSummary summary) {};
 public BeforeRmiInvocationDelegate BeforeRmiInvocation = delegate(Nettention.Proud.BeforeRmiSummary summary) {};
@@ -51,16 +51,6 @@ public BeforeRmiInvocationDelegate BeforeRmiInvocation = delegate(Nettention.Pro
 		{ 
 			return false;
 		};
-		public delegate bool AttackDelegate(Nettention.Proud.HostID remote,Nettention.Proud.RmiContext rmiContext, int count);  
-		public AttackDelegate Attack = delegate(Nettention.Proud.HostID remote,Nettention.Proud.RmiContext rmiContext, int count)
-		{ 
-			return false;
-		};
-		public delegate bool InvalidDelegate(Nettention.Proud.HostID remote,Nettention.Proud.RmiContext rmiContext);  
-		public InvalidDelegate Invalid = delegate(Nettention.Proud.HostID remote,Nettention.Proud.RmiContext rmiContext)
-		{ 
-			return false;
-		};
 		public delegate bool ChangeSymbolDelegate(Nettention.Proud.HostID remote,Nettention.Proud.RmiContext rmiContext, int symbol);  
 		public ChangeSymbolDelegate ChangeSymbol = delegate(Nettention.Proud.HostID remote,Nettention.Proud.RmiContext rmiContext, int symbol)
 		{ 
@@ -73,6 +63,11 @@ public BeforeRmiInvocationDelegate BeforeRmiInvocation = delegate(Nettention.Pro
 		};
 		public delegate bool ZeroCardDelegate(Nettention.Proud.HostID remote,Nettention.Proud.RmiContext rmiContext);  
 		public ZeroCardDelegate ZeroCard = delegate(Nettention.Proud.HostID remote,Nettention.Proud.RmiContext rmiContext)
+		{ 
+			return false;
+		};
+		public delegate bool TurnEndDelegate(Nettention.Proud.HostID remote,Nettention.Proud.RmiContext rmiContext);  
+		public TurnEndDelegate TurnEnd = delegate(Nettention.Proud.HostID remote,Nettention.Proud.RmiContext rmiContext)
 		{ 
 			return false;
 		};
@@ -113,12 +108,6 @@ public BeforeRmiInvocationDelegate BeforeRmiInvocation = delegate(Nettention.Pro
         case Common.Draw:
             ProcessReceivedMessage_Draw(__msg, pa, hostTag, remote);
             break;
-        case Common.Attack:
-            ProcessReceivedMessage_Attack(__msg, pa, hostTag, remote);
-            break;
-        case Common.Invalid:
-            ProcessReceivedMessage_Invalid(__msg, pa, hostTag, remote);
-            break;
         case Common.ChangeSymbol:
             ProcessReceivedMessage_ChangeSymbol(__msg, pa, hostTag, remote);
             break;
@@ -127,6 +116,9 @@ public BeforeRmiInvocationDelegate BeforeRmiInvocation = delegate(Nettention.Pro
             break;
         case Common.ZeroCard:
             ProcessReceivedMessage_ZeroCard(__msg, pa, hostTag, remote);
+            break;
+        case Common.TurnEnd:
+            ProcessReceivedMessage_TurnEnd(__msg, pa, hostTag, remote);
             break;
 		default:
 			 goto __fail;
@@ -492,104 +484,6 @@ core.PostCheckReadMessage(__msg, RmiName_Draw);
         AfterRmiInvocation(summary);
         }
     }
-    void ProcessReceivedMessage_Attack(Nettention.Proud.Message __msg, Nettention.Proud.ReceivedMessage pa, Object hostTag, Nettention.Proud.HostID remote)
-    {
-        Nettention.Proud.RmiContext ctx = new Nettention.Proud.RmiContext();
-        ctx.sentFrom=pa.RemoteHostID;
-        ctx.relayed=pa.IsRelayed;
-        ctx.hostTag=hostTag;
-        ctx.encryptMode = pa.EncryptMode;
-        ctx.compressMode = pa.CompressMode;
-
-        int count; Nettention.Proud.Marshaler.Read(__msg,out count);	
-core.PostCheckReadMessage(__msg, RmiName_Attack);
-        if(enableNotifyCallFromStub==true)
-        {
-        string parameterString = "";
-        parameterString+=count.ToString()+",";
-        NotifyCallFromStub(Common.Attack, RmiName_Attack,parameterString);
-        }
-
-        if(enableStubProfiling)
-        {
-        Nettention.Proud.BeforeRmiSummary summary = new Nettention.Proud.BeforeRmiSummary();
-        summary.rmiID = Common.Attack;
-        summary.rmiName = RmiName_Attack;
-        summary.hostID = remote;
-        summary.hostTag = hostTag;
-        BeforeRmiInvocation(summary);
-        }
-
-        long t0 = Nettention.Proud.PreciseCurrentTime.GetTimeMs();
-
-        // Call this method.
-        bool __ret =Attack (remote,ctx , count );
-
-        if(__ret==false)
-        {
-        // Error: RMI function that a user did not create has been called. 
-        core.ShowNotImplementedRmiWarning(RmiName_Attack);
-        }
-
-        if(enableStubProfiling)
-        {
-        Nettention.Proud.AfterRmiSummary summary = new Nettention.Proud.AfterRmiSummary();
-        summary.rmiID = Common.Attack;
-        summary.rmiName = RmiName_Attack;
-        summary.hostID = remote;
-        summary.hostTag = hostTag;
-        summary.elapsedTime = Nettention.Proud.PreciseCurrentTime.GetTimeMs()-t0;
-        AfterRmiInvocation(summary);
-        }
-    }
-    void ProcessReceivedMessage_Invalid(Nettention.Proud.Message __msg, Nettention.Proud.ReceivedMessage pa, Object hostTag, Nettention.Proud.HostID remote)
-    {
-        Nettention.Proud.RmiContext ctx = new Nettention.Proud.RmiContext();
-        ctx.sentFrom=pa.RemoteHostID;
-        ctx.relayed=pa.IsRelayed;
-        ctx.hostTag=hostTag;
-        ctx.encryptMode = pa.EncryptMode;
-        ctx.compressMode = pa.CompressMode;
-
-        core.PostCheckReadMessage(__msg, RmiName_Invalid);
-        if(enableNotifyCallFromStub==true)
-        {
-        string parameterString = "";
-                NotifyCallFromStub(Common.Invalid, RmiName_Invalid,parameterString);
-        }
-
-        if(enableStubProfiling)
-        {
-        Nettention.Proud.BeforeRmiSummary summary = new Nettention.Proud.BeforeRmiSummary();
-        summary.rmiID = Common.Invalid;
-        summary.rmiName = RmiName_Invalid;
-        summary.hostID = remote;
-        summary.hostTag = hostTag;
-        BeforeRmiInvocation(summary);
-        }
-
-        long t0 = Nettention.Proud.PreciseCurrentTime.GetTimeMs();
-
-        // Call this method.
-        bool __ret =Invalid (remote,ctx  );
-
-        if(__ret==false)
-        {
-        // Error: RMI function that a user did not create has been called. 
-        core.ShowNotImplementedRmiWarning(RmiName_Invalid);
-        }
-
-        if(enableStubProfiling)
-        {
-        Nettention.Proud.AfterRmiSummary summary = new Nettention.Proud.AfterRmiSummary();
-        summary.rmiID = Common.Invalid;
-        summary.rmiName = RmiName_Invalid;
-        summary.hostID = remote;
-        summary.hostTag = hostTag;
-        summary.elapsedTime = Nettention.Proud.PreciseCurrentTime.GetTimeMs()-t0;
-        AfterRmiInvocation(summary);
-        }
-    }
     void ProcessReceivedMessage_ChangeSymbol(Nettention.Proud.Message __msg, Nettention.Proud.ReceivedMessage pa, Object hostTag, Nettention.Proud.HostID remote)
     {
         Nettention.Proud.RmiContext ctx = new Nettention.Proud.RmiContext();
@@ -736,6 +630,54 @@ core.PostCheckReadMessage(__msg, RmiName_ChangeSymbol);
         AfterRmiInvocation(summary);
         }
     }
+    void ProcessReceivedMessage_TurnEnd(Nettention.Proud.Message __msg, Nettention.Proud.ReceivedMessage pa, Object hostTag, Nettention.Proud.HostID remote)
+    {
+        Nettention.Proud.RmiContext ctx = new Nettention.Proud.RmiContext();
+        ctx.sentFrom=pa.RemoteHostID;
+        ctx.relayed=pa.IsRelayed;
+        ctx.hostTag=hostTag;
+        ctx.encryptMode = pa.EncryptMode;
+        ctx.compressMode = pa.CompressMode;
+
+        core.PostCheckReadMessage(__msg, RmiName_TurnEnd);
+        if(enableNotifyCallFromStub==true)
+        {
+        string parameterString = "";
+                NotifyCallFromStub(Common.TurnEnd, RmiName_TurnEnd,parameterString);
+        }
+
+        if(enableStubProfiling)
+        {
+        Nettention.Proud.BeforeRmiSummary summary = new Nettention.Proud.BeforeRmiSummary();
+        summary.rmiID = Common.TurnEnd;
+        summary.rmiName = RmiName_TurnEnd;
+        summary.hostID = remote;
+        summary.hostTag = hostTag;
+        BeforeRmiInvocation(summary);
+        }
+
+        long t0 = Nettention.Proud.PreciseCurrentTime.GetTimeMs();
+
+        // Call this method.
+        bool __ret =TurnEnd (remote,ctx  );
+
+        if(__ret==false)
+        {
+        // Error: RMI function that a user did not create has been called. 
+        core.ShowNotImplementedRmiWarning(RmiName_TurnEnd);
+        }
+
+        if(enableStubProfiling)
+        {
+        Nettention.Proud.AfterRmiSummary summary = new Nettention.Proud.AfterRmiSummary();
+        summary.rmiID = Common.TurnEnd;
+        summary.rmiName = RmiName_TurnEnd;
+        summary.hostID = remote;
+        summary.hostTag = hostTag;
+        summary.elapsedTime = Nettention.Proud.PreciseCurrentTime.GetTimeMs()-t0;
+        AfterRmiInvocation(summary);
+        }
+    }
 		#if USE_RMI_NAME_STRING
 // RMI name declaration.
 // It is the unique pointer that indicates RMI name such as RMI profiler.
@@ -746,11 +688,10 @@ public const string RmiName_Ready="Ready";
 public const string RmiName_UnReady="UnReady";
 public const string RmiName_Down="Down";
 public const string RmiName_Draw="Draw";
-public const string RmiName_Attack="Attack";
-public const string RmiName_Invalid="Invalid";
 public const string RmiName_ChangeSymbol="ChangeSymbol";
 public const string RmiName_OneCard="OneCard";
 public const string RmiName_ZeroCard="ZeroCard";
+public const string RmiName_TurnEnd="TurnEnd";
        
 public const string RmiName_First = RmiName_CreateRoom;
 		#else
@@ -763,11 +704,10 @@ public const string RmiName_Ready="";
 public const string RmiName_UnReady="";
 public const string RmiName_Down="";
 public const string RmiName_Draw="";
-public const string RmiName_Attack="";
-public const string RmiName_Invalid="";
 public const string RmiName_ChangeSymbol="";
 public const string RmiName_OneCard="";
 public const string RmiName_ZeroCard="";
+public const string RmiName_TurnEnd="";
        
 public const string RmiName_First = "";
 		#endif

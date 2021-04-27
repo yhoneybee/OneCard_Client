@@ -26,6 +26,16 @@ public BeforeRmiInvocationDelegate BeforeRmiInvocation = delegate(Nettention.Pro
 		{ 
 			return false;
 		};
+		public delegate bool DrawDelegate(Nettention.Proud.HostID remote,Nettention.Proud.RmiContext rmiContext, int symbol, int num);  
+		public DrawDelegate Draw = delegate(Nettention.Proud.HostID remote,Nettention.Proud.RmiContext rmiContext, int symbol, int num)
+		{ 
+			return false;
+		};
+		public delegate bool ChangeSymbolDelegate(Nettention.Proud.HostID remote,Nettention.Proud.RmiContext rmiContext, int symbol);  
+		public ChangeSymbolDelegate ChangeSymbol = delegate(Nettention.Proud.HostID remote,Nettention.Proud.RmiContext rmiContext, int symbol)
+		{ 
+			return false;
+		};
 		public delegate bool RankDelegate(Nettention.Proud.HostID remote,Nettention.Proud.RmiContext rmiContext, int rank);  
 		public RankDelegate Rank = delegate(Nettention.Proud.HostID remote,Nettention.Proud.RmiContext rmiContext, int rank)
 		{ 
@@ -57,6 +67,12 @@ public BeforeRmiInvocationDelegate BeforeRmiInvocation = delegate(Nettention.Pro
             break;
         case Common.TurnStart:
             ProcessReceivedMessage_TurnStart(__msg, pa, hostTag, remote);
+            break;
+        case Common.Draw:
+            ProcessReceivedMessage_Draw(__msg, pa, hostTag, remote);
+            break;
+        case Common.ChangeSymbol:
+            ProcessReceivedMessage_ChangeSymbol(__msg, pa, hostTag, remote);
             break;
         case Common.Rank:
             ProcessReceivedMessage_Rank(__msg, pa, hostTag, remote);
@@ -170,6 +186,108 @@ __fail:
         AfterRmiInvocation(summary);
         }
     }
+    void ProcessReceivedMessage_Draw(Nettention.Proud.Message __msg, Nettention.Proud.ReceivedMessage pa, Object hostTag, Nettention.Proud.HostID remote)
+    {
+        Nettention.Proud.RmiContext ctx = new Nettention.Proud.RmiContext();
+        ctx.sentFrom=pa.RemoteHostID;
+        ctx.relayed=pa.IsRelayed;
+        ctx.hostTag=hostTag;
+        ctx.encryptMode = pa.EncryptMode;
+        ctx.compressMode = pa.CompressMode;
+
+        int symbol; Nettention.Proud.Marshaler.Read(__msg,out symbol);	
+int num; Nettention.Proud.Marshaler.Read(__msg,out num);	
+core.PostCheckReadMessage(__msg, RmiName_Draw);
+        if(enableNotifyCallFromStub==true)
+        {
+        string parameterString = "";
+        parameterString+=symbol.ToString()+",";
+parameterString+=num.ToString()+",";
+        NotifyCallFromStub(Common.Draw, RmiName_Draw,parameterString);
+        }
+
+        if(enableStubProfiling)
+        {
+        Nettention.Proud.BeforeRmiSummary summary = new Nettention.Proud.BeforeRmiSummary();
+        summary.rmiID = Common.Draw;
+        summary.rmiName = RmiName_Draw;
+        summary.hostID = remote;
+        summary.hostTag = hostTag;
+        BeforeRmiInvocation(summary);
+        }
+
+        long t0 = Nettention.Proud.PreciseCurrentTime.GetTimeMs();
+
+        // Call this method.
+        bool __ret =Draw (remote,ctx , symbol, num );
+
+        if(__ret==false)
+        {
+        // Error: RMI function that a user did not create has been called. 
+        core.ShowNotImplementedRmiWarning(RmiName_Draw);
+        }
+
+        if(enableStubProfiling)
+        {
+        Nettention.Proud.AfterRmiSummary summary = new Nettention.Proud.AfterRmiSummary();
+        summary.rmiID = Common.Draw;
+        summary.rmiName = RmiName_Draw;
+        summary.hostID = remote;
+        summary.hostTag = hostTag;
+        summary.elapsedTime = Nettention.Proud.PreciseCurrentTime.GetTimeMs()-t0;
+        AfterRmiInvocation(summary);
+        }
+    }
+    void ProcessReceivedMessage_ChangeSymbol(Nettention.Proud.Message __msg, Nettention.Proud.ReceivedMessage pa, Object hostTag, Nettention.Proud.HostID remote)
+    {
+        Nettention.Proud.RmiContext ctx = new Nettention.Proud.RmiContext();
+        ctx.sentFrom=pa.RemoteHostID;
+        ctx.relayed=pa.IsRelayed;
+        ctx.hostTag=hostTag;
+        ctx.encryptMode = pa.EncryptMode;
+        ctx.compressMode = pa.CompressMode;
+
+        int symbol; Nettention.Proud.Marshaler.Read(__msg,out symbol);	
+core.PostCheckReadMessage(__msg, RmiName_ChangeSymbol);
+        if(enableNotifyCallFromStub==true)
+        {
+        string parameterString = "";
+        parameterString+=symbol.ToString()+",";
+        NotifyCallFromStub(Common.ChangeSymbol, RmiName_ChangeSymbol,parameterString);
+        }
+
+        if(enableStubProfiling)
+        {
+        Nettention.Proud.BeforeRmiSummary summary = new Nettention.Proud.BeforeRmiSummary();
+        summary.rmiID = Common.ChangeSymbol;
+        summary.rmiName = RmiName_ChangeSymbol;
+        summary.hostID = remote;
+        summary.hostTag = hostTag;
+        BeforeRmiInvocation(summary);
+        }
+
+        long t0 = Nettention.Proud.PreciseCurrentTime.GetTimeMs();
+
+        // Call this method.
+        bool __ret =ChangeSymbol (remote,ctx , symbol );
+
+        if(__ret==false)
+        {
+        // Error: RMI function that a user did not create has been called. 
+        core.ShowNotImplementedRmiWarning(RmiName_ChangeSymbol);
+        }
+
+        if(enableStubProfiling)
+        {
+        Nettention.Proud.AfterRmiSummary summary = new Nettention.Proud.AfterRmiSummary();
+        summary.rmiID = Common.ChangeSymbol;
+        summary.rmiName = RmiName_ChangeSymbol;
+        summary.hostID = remote;
+        summary.hostTag = hostTag;
+        summary.elapsedTime = Nettention.Proud.PreciseCurrentTime.GetTimeMs()-t0;
+        AfterRmiInvocation(summary);
+        }
+    }
     void ProcessReceivedMessage_Rank(Nettention.Proud.Message __msg, Nettention.Proud.ReceivedMessage pa, Object hostTag, Nettention.Proud.HostID remote)
     {
         Nettention.Proud.RmiContext ctx = new Nettention.Proud.RmiContext();
@@ -273,6 +391,8 @@ core.PostCheckReadMessage(__msg, RmiName_Rank);
 // It is the unique pointer that indicates RMI name such as RMI profiler.
 public const string RmiName_Start="Start";
 public const string RmiName_TurnStart="TurnStart";
+public const string RmiName_Draw="Draw";
+public const string RmiName_ChangeSymbol="ChangeSymbol";
 public const string RmiName_Rank="Rank";
 public const string RmiName_ExcludeGame="ExcludeGame";
        
@@ -282,6 +402,8 @@ public const string RmiName_First = RmiName_Start;
 // It is the unique pointer that indicates RMI name such as RMI profiler.
 public const string RmiName_Start="";
 public const string RmiName_TurnStart="";
+public const string RmiName_Draw="";
+public const string RmiName_ChangeSymbol="";
 public const string RmiName_Rank="";
 public const string RmiName_ExcludeGame="";
        

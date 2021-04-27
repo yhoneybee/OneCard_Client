@@ -21,6 +21,10 @@ public class Client : MonoBehaviour
     public static Card Selected;
     public List<Card> Cards { get; set; } = new List<Card>();
 
+    private void Awake()
+    {
+        Screen.SetResolution(160 * 5, 90 * 5, false);
+    }
     void Start()
     {
         Param.serverIP = "127.0.0.1";

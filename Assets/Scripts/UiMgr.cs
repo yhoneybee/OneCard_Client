@@ -6,6 +6,7 @@ public class UiMgr : MonoBehaviour
 {
     public static UiMgr Instance = null;
 
+    public GameObject Connect;
     public GameObject Lobby;
     public GameObject Waiting;
     public GameObject Game;
@@ -28,6 +29,15 @@ public class UiMgr : MonoBehaviour
 
     public void GoLobby()
     {
+        Lobby.SetActive(true);
+        Waiting.SetActive(false);
+        Game.SetActive(false);
+    }
+
+    public void GoConnect()
+    {
+        Connect.SetActive(true);
+        Lobby.SetActive(false);
         Waiting.SetActive(false);
         Game.SetActive(false);
     }

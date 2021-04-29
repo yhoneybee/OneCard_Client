@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using Nettention.Proud;
 using System;
+using TMPro;
 
 public class Client : MonoBehaviour
 {
@@ -21,34 +22,60 @@ public class Client : MonoBehaviour
     public static Card Selected;
     public List<Card> Cards { get; set; } = new List<Card>();
 
+    [Header("InputFields")]
+    public TMP_InputField Ip;
+
     private void Awake()
     {
         Screen.SetResolution(160 * 5, 90 * 5, false);
     }
     void Start()
     {
-        Param.serverIP = "127.0.0.1";
+        Param.serverIP = "119.196.246.120";
         Param.protocolVersion = new Nettention.Proud.Guid("{E54C4938-8BFC-4443-87F3-386C1AA388F0}");
         Param.serverPort = 6475;
 
         Stub.Start = OnStart;
         Stub.TurnStart = OnTurnStart;
         Stub.LastCard = OnLastCard;
+        Stub.Down = OnDown;
         Stub.Draw = OnDraw;
         Stub.ChangeSymbol = OnChangeSymbol;
         Stub.Rank = OnRank;
         Stub.ExcludeGame = OnExcludeGame;
 
+        C.JoinServerCompleteHandler = OnJoinServer;
+
         C.AttachProxy(Proxy);
         C.AttachStub(Stub);
-        C.Connect(Param);
+    }
+
+    private void OnJoinServer(ErrorInfo info, ByteArray replyFromServer)
+    {
         Debug.Log("Connect!");
         UiMgr.Instance.GoLobby();
     }
-    public void Down()
-    {
 
+    public void Connect()
+    {
+        Param.serverIP = Ip.text;
+        C.Connect(Param);
     }
+
+    private bool OnDown(HostID remote, RmiContext rmiContext, int symbol, int num)
+    {
+        foreach (var card in Cards)
+        {
+            if (card.Symbol == symbol && card.Num == num)
+            {
+                Cards.Remove(card);
+                Destroy(card.gameObject);
+                return true;
+            }
+        }
+        return false;
+    }
+
     private bool OnLastCard(HostID remote, RmiContext rmiContext, int symbol, int num)
     {
         LastCard.SetCard(symbol, num, false);
@@ -86,7 +113,8 @@ public class Client : MonoBehaviour
 
     private bool OnTurnStart(HostID remote, RmiContext rmiContext)
     {
-        throw new NotImplementedException();
+
+        return true;
     }
 
     private bool OnRank(HostID remote, RmiContext rmiContext, int rank)
@@ -108,6 +136,8 @@ public class Client : MonoBehaviour
     {
         C.Disconnect();
     }
+
+
 
     public void Ready()
     {

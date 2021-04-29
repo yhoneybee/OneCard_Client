@@ -34,22 +34,28 @@ public class RoomMgr : MonoBehaviour
     }
     public void RoomCreate()
     {
-        Client.Proxy.CreateRoom(HostID.HostID_Server, RmiContext.ReliableSend, Name.text, int.Parse(Pin.text), Max.value + 2);
-        RoomJoin();
-        Rooms.Add(new Room(Name.text, int.Parse(Pin.text), Max.value));
-        Debug.Log($"Name : {Name.text}, Pin : {int.Parse(Pin.text)}, Max : {Max.value + 2}");
+        if (Client.Proxy.CreateRoom(HostID.HostID_Server, RmiContext.ReliableSend, Name.text, int.Parse(Pin.text), Max.value + 2))
+        {
+            Rooms.Add(new Room(Name.text, int.Parse(Pin.text), Max.value));
+            RoomJoin();
+            Debug.Log($"Name : {Name.text}, Pin : {int.Parse(Pin.text)}, Max : {Max.value + 2}");
+        }
     }
     public void RoomLeave()
     {
-        Client.Proxy.LeaveRoom(HostID.HostID_Server, RmiContext.ReliableSend, Client.Room_name);
-        Client.Room_name = default;
-        UiMgr.Instance.GoLobby();
+        if (Client.Proxy.LeaveRoom(HostID.HostID_Server, RmiContext.ReliableSend, Client.Room_name))
+        {
+            Client.Room_name = default;
+            UiMgr.Instance.GoLobby();
+        }
     }
     public void RoomJoin()
     {
-        Client.Proxy.JoinRoom(HostID.HostID_Server, RmiContext.ReliableSend, Name.text, int.Parse(Pin.text));
-        Client.Room_name = Name.text;
-        Client.isReady = false;
-        UiMgr.Instance.GoWaiting();
+        if (Client.Proxy.JoinRoom(HostID.HostID_Server, RmiContext.ReliableSend, Name.text, int.Parse(Pin.text)))
+        {
+            Client.Room_name = Name.text;
+            Client.isReady = false;
+            UiMgr.Instance.GoWaiting();
+        }
     }
 }

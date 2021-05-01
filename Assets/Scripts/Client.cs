@@ -20,7 +20,8 @@ public class Client : MonoBehaviour
     public Card LastCard;
 
     public static Card Selected;
-    public List<Card> Cards { get; set; } = new List<Card>();
+    public static bool MyTurn { get; set; }
+    public static List<Card> Cards { get; set; } = new List<Card>();
 
     [Header("InputFields")]
     public TMP_InputField Ip;
@@ -28,6 +29,7 @@ public class Client : MonoBehaviour
     private void Awake()
     {
         Screen.SetResolution(160 * 5, 90 * 5, false);
+        MyTurn = false;
     }
     void Start()
     {
@@ -69,7 +71,10 @@ public class Client : MonoBehaviour
             if (card.Symbol == symbol && card.Num == num)
             {
                 Cards.Remove(card);
+                if (Cards.Count > 0)
+                    Cards[Cards.Count - 1].SetCard(Cards[Cards.Count - 1].Symbol, Cards[Cards.Count - 1].Num);
                 Destroy(card.gameObject);
+                Proxy.ChangeSymbol(HostID.HostID_Server, RmiContext.ReliableSend, CardDown.choose);
                 return true;
             }
         }
@@ -98,7 +103,7 @@ public class Client : MonoBehaviour
 
     private bool OnChangeSymbol(HostID remote, RmiContext rmiContext, int symbol)
     {
-        LastCard.SetCard(symbol, LastCard.Num);
+        LastCard.SetCard(symbol, LastCard.Num, false);
         return true;
     }
 
@@ -113,7 +118,7 @@ public class Client : MonoBehaviour
 
     private bool OnTurnStart(HostID remote, RmiContext rmiContext)
     {
-
+        MyTurn = true;
         return true;
     }
 

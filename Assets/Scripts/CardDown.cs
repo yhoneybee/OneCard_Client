@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.UI;
 
 public class CardDown : MonoBehaviour
 {
@@ -65,9 +66,10 @@ public class CardDown : MonoBehaviour
         {
             Client.MyTurn = false;
             Card card = Select.GetComponent<Card>();
-            Client.Proxy.TurnEnd(Nettention.Proud.HostID.HostID_Server, Nettention.Proud.RmiContext.ReliableSend);
             Client.Proxy.Down(Nettention.Proud.HostID.HostID_Server, Nettention.Proud.RmiContext.ReliableSend, card.Symbol, card.Num);
-            
+            Client.Proxy.NowCardsCount(Nettention.Proud.HostID.HostID_Server, Nettention.Proud.RmiContext.ReliableSend, Client.Cards.Count);
+            Client.Proxy.TurnEnd(Nettention.Proud.HostID.HostID_Server, Nettention.Proud.RmiContext.ReliableSend);
+            UiMgr.Instance.Down.GetComponent<Image>().color = new Color(255, 255, 255, 255);
         }
     }
 }

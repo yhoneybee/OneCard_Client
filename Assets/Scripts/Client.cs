@@ -26,6 +26,9 @@ public class Client : MonoBehaviour
     [Header("InputFields")]
     public TMP_InputField Ip;
 
+    public GameObject Client_Parent;
+    public GameObject Clients;
+
     private void Awake()
     {
         Screen.SetResolution(160 * 5, 90 * 5, false);
@@ -45,11 +48,34 @@ public class Client : MonoBehaviour
         Stub.ChangeSymbol = OnChangeSymbol;
         Stub.Rank = OnRank;
         Stub.ExcludeGame = OnExcludeGame;
+        Stub.NowCardsCount = OnNowCardsCount;
 
         C.JoinServerCompleteHandler = OnJoinServer;
 
         C.AttachProxy(Proxy);
         C.AttachStub(Stub);
+    }
+
+    private bool OnNowCardsCount(HostID remote, RmiContext rmiContext, HostID client, int count)
+    {
+        // 다른 클라이언트들의 카드수가 날라옴
+        // count -> 카드수
+        // client -> count만큼 카드를 들고있는 클라이언트
+        GameObject c = GameObject.Find($"{client}");
+        if (c)
+        {
+            c.transform.Find("Cards").GetComponent<TextMeshProUGUI>().text = count.ToString();
+        }
+        else//null
+        {
+            c = Instantiate(Clients);
+            c.name = $"{client}";
+            c.transform.Find("ID").GetComponent<TextMeshProUGUI>().text = client.ToString();
+            c.transform.Find("Cards").GetComponent<TextMeshProUGUI>().text = count.ToString();
+            c.transform.SetParent(Client_Parent.transform);
+            c.GetComponent<RectTransform>().localScale = UnityEngine.Vector3.one;
+        }
+        return true;
     }
 
     private void OnJoinServer(ErrorInfo info, ByteArray replyFromServer)
@@ -75,6 +101,7 @@ public class Client : MonoBehaviour
                     Cards[Cards.Count - 1].SetCard(Cards[Cards.Count - 1].Symbol, Cards[Cards.Count - 1].Num);
                 Destroy(card.gameObject);
                 Proxy.ChangeSymbol(HostID.HostID_Server, RmiContext.ReliableSend, CardDown.choose);
+                Proxy.NowCardsCount(HostID.HostID_Server, rmiContext, Cards.Count);
                 return true;
             }
         }
@@ -98,6 +125,7 @@ public class Client : MonoBehaviour
             prev_box.size = new Vector2(125, 300);
         }
         Cards.Add(card.GetComponent<Card>());
+        Proxy.NowCardsCount(HostID.HostID_Server, rmiContext, Cards.Count);
         return true;
     }
 
@@ -119,6 +147,8 @@ public class Client : MonoBehaviour
     private bool OnTurnStart(HostID remote, RmiContext rmiContext)
     {
         MyTurn = true;
+        UiMgr.Instance.Down.GetComponent<Image>().color = new Color(255, 255, 0, 255);
+        Proxy.NowCardsCount(HostID.HostID_Server, rmiContext, Cards.Count);
         return true;
     }
 

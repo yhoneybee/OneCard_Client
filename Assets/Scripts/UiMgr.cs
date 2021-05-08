@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class UiMgr : MonoBehaviour
 {
@@ -10,6 +11,8 @@ public class UiMgr : MonoBehaviour
     public GameObject Lobby;
     public GameObject Waiting;
     public GameObject Game;
+
+    public GameObject Down;
 
     private void Awake()
     {

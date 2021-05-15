@@ -31,7 +31,7 @@ public class Client : MonoBehaviour
 
     private void Awake()
     {
-        Screen.SetResolution(160 * 5, 90 * 5, false);
+        Screen.SetResolution(/*160 * 5, 90 * 5*/1680,1050, false);
         MyTurn = false;
     }
     void Start()
@@ -64,17 +64,41 @@ public class Client : MonoBehaviour
         GameObject c = GameObject.Find($"{client}");
         if (c)
         {
-            c.transform.Find("Cards").GetComponent<TextMeshProUGUI>().text = count.ToString();
+            /*c.transform.Find("Cards").GetComponent<TextMeshProUGUI>().text = $"X {count}";*/
         }
         else//null
         {
             c = Instantiate(Clients);
             c.name = $"{client}";
-            c.transform.Find("ID").GetComponent<TextMeshProUGUI>().text = client.ToString();
-            c.transform.Find("Cards").GetComponent<TextMeshProUGUI>().text = count.ToString();
+            c.transform.Find("ID").GetComponent<TextMeshProUGUI>().text = $"[{client}]";
             c.transform.SetParent(Client_Parent.transform);
-            c.GetComponent<RectTransform>().localScale = UnityEngine.Vector3.one;
+            RectTransform c_rtf = c.GetComponent<RectTransform>();
+            c_rtf.localScale = UnityEngine.Vector3.one;
+            c_rtf.position = new UnityEngine.Vector3(c_rtf.position.x, c_rtf.position.y, 0);
         }
+
+        GameObject card_parent = c.transform.Find("Cards").gameObject;
+        int child_count = card_parent.transform.childCount;
+        if (child_count > count)
+        {
+            // --
+            for (int i = 0; i < child_count - count; i++)
+            {
+                Destroy(card_parent.transform.GetChild(0).transform.gameObject);
+            }
+        }
+        else if (child_count < count)
+        {
+            // ++
+            for (int i = 0; i < count - child_count; i++)
+            {
+                GameObject obj = Instantiate(Resources.Load<GameObject>("Prefabs/Card"));
+                obj.transform.SetParent(card_parent.transform);
+                obj.GetComponent<RectTransform>().localScale = UnityEngine.Vector3.one;
+                obj.transform.position = new UnityEngine.Vector3(obj.transform.position.x, obj.transform.position.y, 0);
+            }
+        }
+
         return true;
     }
 
